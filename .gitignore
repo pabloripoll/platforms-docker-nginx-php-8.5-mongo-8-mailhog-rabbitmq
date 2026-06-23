@@ -41,19 +41,19 @@ lerna-debug.log*
 
 # Repository
 
-# Platforms
+/Makefile
 
 # Project Schemas Samples
-/resources/docs/apirest/*
-!/resources/docs/apirest/.gitkeep
 /resources/databases/*
 !/resources/databases/.gitkeep
 
 # API content
-/apirest/*
-!/apirest/.gitkeep
-/webapp/*
-!/webapp/.gitkeep
+/api-grpc/*
+!/api-grpc/.gitkeep
+/api-rest/*
+!/api-rest/.gitkeep
+/application/*
+!/application/.gitkeep
 
 # Personal developer vault
 /vault
