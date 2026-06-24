@@ -15,18 +15,50 @@
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=Ubuntu&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/-MongoDB-13aa52?style=for-the-badge&logo=mongodb&logoColor=white)
 
-RabbitMQ is a reliable and mature messaging and streaming broker, which is easy to deploy on cloud environments, on-premises, and on your local machine.
+MongoDB is a popular, open-source NoSQL database that stores data in flexible, JSON-like documents rather than traditional rigid tables. It allows developers to store complex and varied data types easily, making it highly adaptable and scalable for modern web and mobile applications.
 
 Content:
 - Linux Ubuntu 24.04
 - MongoDB 8+
+- Mongo Express
 <br><br>
 
 Sources:
+- https://www.mongodb.com/docs/
 - https://github.com/mongodb
 - https://hub.docker.com/_/mongo
 - https://github.com/docker-library/mongo/tree/master/8.2
+
+### Key Differences from Traditional Databases
+
+To understand MongoDB, it helps to see how it differs from traditional relational databases (like MySQL or PostgreSQL):
+```
+Feature             Relational (e.g., MySQL)                            MongoDB (NoSQL)
+Data Structure      Tables with strict rows and columns                 Collections of flexible documents (similar to JSON objects)
+Schema              Rigid: All rows must have the same columns          Dynamic: Documents in the same collection can have different fields
+Scalability         Usually scaled vertically                           Scaled horizontally
+Best For            Highly structured data with strict relationships    Unstructured/semi-structured data that changes often
+```
+
+### Core Components of MongoDB
+- Database: The primary container that houses all your collections of data.
+- Collections: The equivalent of a "table" in a SQL database. It is a grouping of MongoDB documents.
+- Documents: The fundamental unit of data in MongoDB, stored as BSON (Binary JSON). They consist of key-value pairs. For example:
+    ```json
+        {
+            "_id": "12345",
+            "name": "Alice",
+            "age": 28,
+            "interests": ["coding", "hiking"]
+        }
+    ```
+### Why Developers Use It
+
+- Rapid Development: The document model maps directly to objects in application code, eliminating the need to write complex "joins" to piece data together
+- Scalability: It handles massive amounts of traffic and data growth effortlessly by distributing the workload across multiple machines.
+- Flexibility: You can add, remove, or change fields in documents without having to migrate or alter the entire database.
 <br><br>
+
 
 ## <a id="configuration"></a>Service Configuration
 
@@ -49,13 +81,13 @@ COMPOSE_PROJECT_HOST="127.0.0.1"                        # <- machine hostname re
 COMPOSE_PROJECT_CPUS="2.00"                             # <- container's maximum CPUs usage to apply by docker-compose - leave it empty for full usage ------> #
 COMPOSE_PROJECT_MEM=512M                                # <- container's maximum RAM usage to apply by docker-compose ---------------------------------------> #
 COMPOSE_PROJECT_SWAP=1G                                 # <- container's RAM swap space in storage executed by automation command ---------------------------> #
-COMPOSE_PROJECT_PORT=7710                               # <- local machine port opened for container service ------------------------------------------------> #
-COMPOSE_PROJECT_PORT_APP=7705                           # <- application ui management port -----------------------------------------------------------------> #
-MONGO_INITDB_DATABASE="develop"                         # <- database name ----------------------------------------------------------------------------------> #
-MONGO_INITDB_ROOT_USERNAME="rootuser"                   # <- database root user -----------------------------------------------------------------------------> #
-MONGO_INITDB_ROOT_PASSWORD="rootpass"                   # <- database root password -------------------------------------------------------------------------> #
-MONGO_EXPRESS_USERNAME="devuser"                        # <- database user ----------------------------------------------------------------------------------> #
-MONGO_EXPRESS_PASSWORD="devpass"                        # <- database password ------------------------------------------------------------------------------> #
+COMPOSE_PROJECT_PORT=7711                               # <- local machine port opened for container service ------------------------------------------------> #
+COMPOSE_PROJECT_PORT_APP=7712                           # <- application ui management port -----------------------------------------------------------------> #
+MONGO_INITDB_DATABASE=dev_local                         # <- database name ----------------------------------------------------------------------------------> #
+MONGO_INITDB_ROOT_USERNAME=devuser                      # <- database root user -----------------------------------------------------------------------------> #
+MONGO_INITDB_ROOT_PASSWORD=devpass                      # <- database root password -------------------------------------------------------------------------> #
+MONGO_EXPRESS_USERNAME="appuser"                        # <- database user ----------------------------------------------------------------------------------> #
+MONGO_EXPRESS_PASSWORD="apppass"                        # <- database password ------------------------------------------------------------------------------> #
 ```
 
 ### Containers Access Modes

@@ -28,7 +28,7 @@ DOCKER_HOST=$(PROJECT_HOST)
 DOCKER_IMGK=$(MONGODB_IMGK)
 DOCKER_CAAS=$(MONGODB_CAAS)
 DOCKER_BIND=$(MONGODB_BIND)
-DOCKER_CPUS=$(MONGO_CAAS_CPUS)
+DOCKER_CPUS=$(MONGODB_CAAS_CPUS)
 DOCKER_MEM=$(MONGODB_CAAS_MEM)
 DOCKER_SWAP=$(MONGODB_CAAS_SWAP)
 DOCKER_PORT=$(MONGODB_PORT)
@@ -98,11 +98,12 @@ else
 	MONGODB_EXPRESS_USERNAME=\"$(MONGODB_APP_USER)\"\r\n\
 	MONGODB_EXPRESS_PASSWORD=\"$(MONGODB_APP_PASS)\"" > ./docker/.env; \
 	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - "${C_YEL}"docker-compose.yml"${C_END}" .env file "${C_GRN}"has been set."${C_END};
-	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - Container: "${C_GRN}$(DOCKER_CONTAINER)${C_END}
+	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - Container name: "${C_GRN}$(DOCKER_CONTAINER)${C_END}
+	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - Container image: "${C_GRN}$(DOCKER_IMGK)${C_END}
 	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - Max. CPUs: "${C_GRN}$(DOCKER_CPUS)${C_END}
 	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - Max. memory usage: "${C_GRN}$(DOCKER_MEM)${C_END}
-	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - Is going to be served at: "${C_GRN}http://127.0.0.1:$(DOCKER_PORT)${C_END}
-	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" CLIENT - Is going to be served at: "${C_GRN}http://127.0.0.1:$(DOCKER_APP_PORT)${C_END}
+	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - DB connection at: "${C_GRN}http://127.0.0.1:$(DOCKER_PORT)${C_END}
+	echo ${C_BLU}"$(PROJECT_NAME)"${C_END}" DOCUMENT DB "${C_YEL}$(DOCKER_PLTF)${C_END}" - DB client at: "${C_GRN}http://127.0.0.1:$(DOCKER_APP_PORT)${C_END}
 endif
 
 # -------------------------------------------------------------------------------------------------
@@ -125,11 +126,14 @@ info: ## shows container information
 ssh: ## enters the container shell
 	$(DOCKER_EXEC_SSH)
 
-build: ## builds the container from Dockerfile
-	cd docker && $(DOCKER_COMPOSE) up --build --no-recreate -d
+up: ## starts and recreates containers if compose config or image changed, runnning in detached mode
+	cd docker && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.public.yml -f docker-compose.client.yml -f docker-compose.client.public.yml up -d
 
-up: ## attaches to containers for a service and also starts any linked services
-	cd docker && $(DOCKER_COMPOSE) up -d
+build: ## builds and ensures changes in the Dockerfile, build steps, or copied-in files are applied. Not --no-recreate
+	cd docker && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.public.yml -f docker-compose.client.yml -f docker-compose.client.public.yml up --build -d
+
+network: ## starts up into an existing custom network for container-to-container communication, runnning in detached mode
+	cd docker && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.network.yml -f docker-compose.client.yml -f docker-compose.client.network.yml up -d
 
 start: ## starts the container and put on running
 	cd docker && $(DOCKER_COMPOSE) start
@@ -151,6 +155,3 @@ destroy: ## delete container image from Docker cache
 
 dev: ## sets a development enviroment
 	echo ${C_YEL}"\"dev\" recipe has not usage in this project"${C_END};
-
-network:
-	cd docker && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.network.yml up -d

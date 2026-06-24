@@ -136,12 +136,14 @@ mongo-info: ## shows docker related information
 mongo-set: ## sets the database enviroment file to build the container
 	cd platforms/$(MONGODB_PLTF) && $(MAKE) env-set
 
-mongo-create: ## creates the database container from Docker image
-	cd platforms/$(MONGODB_PLTF) && $(MAKE) build up
+mongo-build: ## builds and ensures changes in the Dockerfile, build steps, or copied-in files are applied
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) build
 
-mongo-network: ## creates the database container external network
-	$(MAKE) apirest-stop
-	cd platforms/$(MONGODB_PLTF) && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.network.yml up -d
+mongo-create: ## starts up or creates the container for running in detached mode
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) up
+
+mongo-network: ## starts up into an existing custom network for container-to-container communication, runnning in detached mode
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) clear network
 
 mongo-ssh: ## enters the apirest container shell
 	cd platforms/$(MONGODB_PLTF) && $(MAKE) ssh
