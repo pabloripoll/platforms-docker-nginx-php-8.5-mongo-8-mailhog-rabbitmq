@@ -128,32 +128,32 @@ apirest-destroy: ## destroys completly the apirest container
 .PHONY: mongo-hostcheck mongo-info mongo-set mongo-create mongo-ssh mongo-start mongo-stop mongo-destroy
 
 mongo-hostcheck: ## shows this project ports availability on local machine for database container
-	cd platform/$(MONGODB_PLTF) && $(MAKE) port-check
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) port-check
 
 mongo-info: ## shows docker related information
-	cd platform/$(MONGODB_PLTF) && $(MAKE) info
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) info
 
 mongo-set: ## sets the database enviroment file to build the container
-	cd platform/$(MONGODB_PLTF) && $(MAKE) env-set
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) env-set
 
 mongo-create: ## creates the database container from Docker image
-	cd platform/$(MONGODB_PLTF) && $(MAKE) build up
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) build up
 
 mongo-network: ## creates the database container external network
 	$(MAKE) apirest-stop
-	cd platform/$(MONGODB_PLTF) && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.network.yml up -d
+	cd platforms/$(MONGODB_PLTF) && $(DOCKER_COMPOSE) -f docker-compose.yml -f docker-compose.network.yml up -d
 
 mongo-ssh: ## enters the apirest container shell
-	cd platform/$(MONGODB_PLTF) && $(MAKE) ssh
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) ssh
 
 mongo-start: ## starts the database container running
-	cd platform/$(MONGODB_PLTF) && $(MAKE) start
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) start
 
 mongo-stop: ## stops the database container but its assets will not be destroyed
-	cd platform/$(MONGODB_PLTF) && $(MAKE) stop
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) stop
 
 mongo-restart: ## restarts the running database container
-	cd platform/$(MONGODB_PLTF) && $(MAKE) restart
+	cd platforms/$(MONGODB_PLTF) && $(MAKE) restart
 
 mongo-destroy: ## destroys completly the database container with its data
 	echo ${C_RED}"Attention!"${C_END};
@@ -161,7 +161,7 @@ mongo-destroy: ## destroys completly the database container with its data
 	@echo -n ${C_RED}"Are you sure to proceed? "${C_END}"[y/n]: " && read response && if [ $${response:-'n'} != 'y' ]; then \
         echo ${C_GRN}"K.O.! container has been stopped but not destroyed."${C_END}; \
     else \
-		cd platform/$(MONGODB_PLTF) && $(MAKE) stop clear destroy; \
+		cd platforms/$(MONGODB_PLTF) && $(MAKE) stop clear destroy; \
 		echo -n ${C_GRN}"Do you want to clear DOCKER cache? "${C_END}"[y/n]: " && read response && if [ $${response:-'n'} != 'y' ]; then \
 			echo ${C_YEL}"The following commands are delegated to be executed by user:"${C_END}; \
 			echo "$$ $(DOCKER) system prune"; \
